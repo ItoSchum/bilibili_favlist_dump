@@ -139,12 +139,13 @@ def file_dump(item_list, dump_mode, title = ''):
 			folder_path = os.path.join(os.path.expanduser(output_path), folder_basename)
 			mkdir(folder_path)
 			os.system('annie -n %d -o "%s" -p av%d' % (int(thread_amount), folder_path, media_item['media_id']))
-			# target = os.path.join(os.path.expanduser(folder_path), media_item['title'])
-			# os.system(
-			# 	'''
-			# 	i="%s.flv"
-			# 	ffmpeg -i "$i" -c copy -movflags +faststart "$(basename $i .flv).mp4"
-			# 	''' % (target))
+			
+			# media_basename = os.path.join(os.path.expanduser(folder_path), media_item['title'])
+			# media_input = media_basename + '.flv'
+			# media_output = media_basename + '.mp4'
+			# stream = ffmpeg.input(media_input)
+			# stream = ffmpeg.output(stream, media_output, **{'c': 'copy', 'movflags': '+faststart'})
+			# ffmpeg.run(stream)
 			print("---  " + media_item['title'] + " Complete  ---\n")
 	else:
 		for media_item in item_list: 
@@ -152,12 +153,13 @@ def file_dump(item_list, dump_mode, title = ''):
 			folder_path = os.path.join(os.path.expanduser(output_path), folder_basename)
 			mkdir(folder_path)
 			os.system('annie -n %d -c "%s" -o "%s" -p av%d' % (int(thread_amount), cookie_path, folder_path, media_item['media_id']))
-			# target = os.path.join(os.path.expanduser(folder_path), media_item['title'])
-			# os.system(
-			# 	'''
-			# 	i="%s.flv"
-			# 	ffmpeg -i "$i" -c copy -movflags +faststart "$(basename $i .flv).mp4"
-			# 	''' % (target))
+
+			# media_basename = os.path.join(os.path.expanduser(folder_path), media_item['title'])
+			# media_input = media_basename + '.flv'
+			# media_output = media_basename + '.mp4'
+			# stream = ffmpeg.input(media_input)
+			# stream = ffmpeg.output(stream, media_output, **{'c': 'copy', 'movflags': '+faststart'})
+			# ffmpeg.run(stream)
 			print("---  " + media_item['title'] + " Complete  ---\n")
 
 
