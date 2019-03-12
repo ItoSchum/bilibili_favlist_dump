@@ -2,8 +2,9 @@
 
 ## Feature
 - Crawl Bilibili Public Folders
-- Crawl all the public folders or the specific one (Public Only)
-- Sort downloads by uploder name automatically
+- Crawl all the public folders of one user or the specific one (**Public Only**)
+- **Auto-sort** downloads by uploder name automatically
+- Auto-build **csv** files for each folder
 
 ## Requirement
 - Python3
@@ -68,3 +69,4 @@
 ![demo1_info_dump.jpg](media/demo1_info_dump.jpg)
 ![demo2_file_dump.jpg](media/demo2_file_dump.jpg)
 ![demo3_csv.jpg](media/demo3_csv.png)
+ 
