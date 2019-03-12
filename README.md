@@ -1,4 +1,4 @@
-# Bilibili Folder Dumper
+# Bilibili Folder Dump
 
 ## Feature
 - Crawl Bilibili Public Folders
