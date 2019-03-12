@@ -120,15 +120,11 @@ def single_info_dump():
 
 
 
-def file_dump(item_list, dump_mode, title = ''):
+def file_dump(item_list, dump_mode, thread_amount, cookie_path, output_path, title = ''):
 
 	# f_cookies = open(r"./myBilibiliCookies.txt","r")
 	# cookies = f_cookies.read()
 	# f_cookies.close()
-	
-	thread_amount = input('Thread amount: ')
-	cookie_path = input('Cookies Path (0 for not required): ')
-	output_path = input('Output Path: ')
 
 	output_path = os.path.join(os.path.expanduser(output_path), title)
 	mkdir(output_path) 
@@ -139,13 +135,7 @@ def file_dump(item_list, dump_mode, title = ''):
 			folder_path = os.path.join(os.path.expanduser(output_path), folder_basename)
 			mkdir(folder_path)
 			os.system('annie -n %d -o "%s" -p av%d' % (int(thread_amount), folder_path, media_item['media_id']))
-			
-			# media_basename = os.path.join(os.path.expanduser(folder_path), media_item['title'])
-			# media_input = media_basename + '.flv'
-			# media_output = media_basename + '.mp4'
-			# stream = ffmpeg.input(media_input)
-			# stream = ffmpeg.output(stream, media_output, **{'c': 'copy', 'movflags': '+faststart'})
-			# ffmpeg.run(stream)
+			# ffmpeg_repack(folder_path, media_item['title'])
 			print("---  " + media_item['title'] + " Complete  ---\n")
 	else:
 		for media_item in item_list: 
@@ -153,14 +143,19 @@ def file_dump(item_list, dump_mode, title = ''):
 			folder_path = os.path.join(os.path.expanduser(output_path), folder_basename)
 			mkdir(folder_path)
 			os.system('annie -n %d -c "%s" -o "%s" -p av%d' % (int(thread_amount), cookie_path, folder_path, media_item['media_id']))
-
-			# media_basename = os.path.join(os.path.expanduser(folder_path), media_item['title'])
-			# media_input = media_basename + '.flv'
-			# media_output = media_basename + '.mp4'
-			# stream = ffmpeg.input(media_input)
-			# stream = ffmpeg.output(stream, media_output, **{'c': 'copy', 'movflags': '+faststart'})
-			# ffmpeg.run(stream)
+			# ffmpeg_repack(folder_path, media_item['title'])
 			print("---  " + media_item['title'] + " Complete  ---\n")
+
+
+
+# def ffmpeg_repack(folder_path, title):
+	
+# 	media_basename = os.path.join(os.path.expanduser(folder_path), title)
+# 	media_input = media_basename + '.flv'
+# 	media_output = media_basename + '.mp4'
+# 	stream = ffmpeg.input(media_input)
+# 	stream = ffmpeg.output(stream, media_output, **{'c': 'copy', 'movflags': '+faststart'})
+# 	ffmpeg.run(stream)
 
 
 
@@ -178,16 +173,20 @@ def mkdir(path):
 def __main__():
 	dump_mode = input("\nPlease Choose Mode:\n 1 --- Dump Single Folder\n 2 --- Dump All\nMode: ")
 
+	thread_amount = input('Thread amount: ')
+	cookie_path = input('Cookies Path (0 for not required): ')
+	output_path = input('Output Path: ')
+
 	if dump_mode == '1':
 		medialist_detail = single_info_dump()
-		file_dump(medialist_detail, dump_mode)
+		file_dump(medialist_detail, dump_mode, thread_amount, cookie_path, output_path)
 	
 	elif dump_mode == '2':
 		medialist_detail = all_info_dump()
 		serial = 0
 		for medialist in medialist_detail: 
 			title = medialist_brief[serial]['title']
-			file_dump(medialist_detail[serial], dump_mode, title = title)
+			file_dump(medialist_detail[serial], dump_mode, thread_amount, cookie_path, output_path, title = title)
 			serial += 1
 
 	print('All Complete')
