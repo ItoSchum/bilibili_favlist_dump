@@ -65,7 +65,6 @@
 		- Input `Y` or `y` if you want to keep the origianl flv files 
 
 ## Demo
-![demo.jpg](media/demo.jpg)
-![favlist_dump_plan.jpg](media/favlist_dump_plan.jpg)
-
-
+![demo1_info_dump.jpg](media/demo1_info_dump.jpg)
+![demo2_file_dump.jpg](media/demo2_file_dump.jpg)
+![demo3_csv.jpg](media/demo3_csv.png)
