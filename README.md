@@ -8,7 +8,7 @@
 ## Requirement
 - Python3
 - annie
-- FFmpeg & Zsh (only for Shell script)
+- FFmpeg & Bash (only for additional Shell script)
 
 ### How to Install
 #### Python3
@@ -48,7 +48,7 @@
 5. When `Output Path: ` displayed<br>
 	- Please input the path where you want to save the vidoes.
 		- path without any special character is recommended
-		- e.g. `~/[YOUR_DIRNAME]`
+		- e.g. `~/[$YOUR_DIRNAME]`
 	- If the `path` doesn't exist, it will be made up automatically, or it will just use the exist one.
 	- If you choose a `path` where there has already been some earlier image downloads by this script or not, the images will still be downloaded and replaced (if they share the same name).
 
@@ -56,15 +56,15 @@
 	- Please input the uid/mid or fid (depend on the mode you chosen)
 
 ## *Additonal
-> Not inclued in the Python script
+> Not included in the Python script
 
-- Shell script `flv2mp4_dir.sh` and `flv2mp4_ddir.sh` can be used for re-encapsulating the flv videos (**Zsh** and **FFmpeg** required)
-	- `flv2mp4_dir.sh` can be used for re-encapsulating videos only in the current directory 
-	- `flv2mp4_ddir.sh` can be used for re-encapsulating videos in the current directory and one-depth sub-directories.
+- Shell script `flv2mp4.sh` can be used for re-encapsulating videos in the current directory and all the sub-directories. (**Bash** and **FFmpeg** required)
 
 - Usage:
-	- `cd` to the target directory
-	- `zsh [shell_script_path]`
+	1. `cd` to the target directory in Terminal
+	2. `sh [$shell_script_path]`
+	3. When `Keep original flv files? (Y/N) ` displayed
+		- Input `Y` or `y` if you want to keep the origianl flv files 
 
 ## Demo
 ![demo.jpg](media/demo.jpg)
