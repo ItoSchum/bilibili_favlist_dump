@@ -40,19 +40,17 @@
 	- Input `2`: Dump All (uid/mid will be required)
 		- It will download the videos in every folder which is public by the target user. 
 
-3. When `Thread amount: ` displayed<br>
-
-4. When `Cookies Path (0 for not required): ` displayed<br>
+3. When `Cookies Path (0 for not required): ` displayed<br>
 	- Please input the path to load the Cookies (for hi-definition version videos' requirement).
 
-5. When `Output Path: ` displayed<br>
+4. When `Output Path: ` displayed<br>
 	- Please input the path where you want to save the vidoes.
 		- path without any special character is recommended
 		- e.g. `~/[$YOUR_DIRNAME]`
 	- If the `path` doesn't exist, it will be made up automatically, or it will just use the exist one.
 	- If you choose a `path` where there has already been some earlier image downloads by this script or not, the images will still be downloaded and replaced (if they share the same name).
 
-6. When `User ID (aka uid/mid): ` or `Medialist ID (aka fid): ` displayed<br> 
+5. When `User ID (aka uid/mid): ` or `Medialist ID (aka fid): ` displayed<br> 
 	- Please input the uid/mid or fid (depend on the mode you chosen)
 
 ## *Additonal

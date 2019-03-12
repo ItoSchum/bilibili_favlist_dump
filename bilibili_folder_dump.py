@@ -73,12 +73,15 @@ def all_info_dump():
 			for fav_item in medias:    
 				media_id = fav_item['id']    
 				title = fav_item['title']    
-				intro = fav_item['intro'] 
+				# intro = fav_item['intro'] 
+				upper_mid = fav_item['upper']['mid']
 				upper_name = fav_item['upper']['name']
-				medialist_detail[serial].append({'media_id': media_id, 'title': title, 'intro': intro, 'upper_name': upper_name})
+				medialist_detail[serial].append({'media_id': media_id, 'upper_mid': upper_mid, 'intro': intro, 'upper_name': upper_name})
 				
 				print(media_id, upper_name, title)
 			print('\n')
+
+		medialist_detail_dump(medialist_detail[serial], medialist_title)
 
 	return medialist_detail
 
@@ -97,7 +100,7 @@ def single_info_dump():
 		page_num_max = int(media_count / 20) + 1
 	else:
 		page_num_max = int(media_count / 20)
-	
+
 	medialist_detail = []
 	for page_num in range(1, page_num_max + 1, 1):
 		medialist_detail_jsonp = prefix + 'spaceDetail?media_id=' + str(fid) +'&pn=' + str(page_num) +'&ps=20&keyword=&order=mtime&type=0&tid=0&jsonp=jsonp'
@@ -109,33 +112,50 @@ def single_info_dump():
 		for fav_item in medias:    
 			media_id = fav_item['id']    
 			title = fav_item['title']    
-			intro = fav_item['intro'] 
+			# intro = fav_item['intro'] 
+			upper_mid = fav_item['upper']['mid']
 			upper_name = fav_item['upper']['name']
 			print(media_id, upper_name, title)
 			
-			medialist_detail.append({'media_id': media_id, 'title': title, 'intro': intro, 'upper_name': upper_name})
-			
+			medialist_detail.append({'media_id': media_id, 'title': title, 'upper_mid': upper_mid, 'upper_name': upper_name})
 		print('\n')
 
+	medialist_detail_dump(medialist_detail, medialist_title)
+		
 	return (medialist_detail, medialist_title)
 
 
+def medialist_detail_dump(medialist_detail, medialist_title):
 
-def file_dump(item_list, dump_mode, thread_amount, cookie_path, output_path, title = ""):
+	o_metadata=open(r"./favlist_" + medialist_title + ".csv","w")
+	print("Media_ID, Upper_ID, Upper_Name, Title", file = o_metadata)
+	
+	for i in range(len(medialist_detail)):
+		print("av%s, %s, %s, %s" % (medialist_detail[i]['media_id'], medialist_detail[i]['upper_mid'], medialist_detail[i]['upper_name'], medialist_detail[i]['title']), file = o_metadata)
+
+	print("Done.\nMetadata File has been created in your current dir.")
+	o_metadata.close()
+
+
+def file_dump(item_list, dump_mode, cookie_path, output_path, title = ""):
 
 	# f_cookies = open(r"./myBilibiliCookies.txt","r")
 	# cookies = f_cookies.read()
 	# f_cookies.close()
 
+	favlist_title = "favlist_" + title + ".csv"
+	os.system('mv "%s" "%s"' % (favlist_title, output_path))
 	output_path = os.path.join(os.path.expanduser(output_path), title)
 	mkdir(output_path) 
 	
+	thread_amount = 15
+
 	if cookie_path == '0':
 		for media_item in item_list: 
 			folder_basename = media_item['upper_name']
 			folder_path = os.path.join(os.path.expanduser(output_path), folder_basename)
 			mkdir(folder_path)
-			os.system('annie -n %d -o "%s" -p av%d' % (int(thread_amount), folder_path, media_item['media_id']))
+			os.system('annie -n %d -o "%s" -p av%d' % (thread_amount, folder_path, media_item['media_id']))
 			# ffmpeg_repack(folder_path, media_item['title'])
 			print("---  " + media_item['title'] + " Complete  ---\n")
 	else:
@@ -143,7 +163,7 @@ def file_dump(item_list, dump_mode, thread_amount, cookie_path, output_path, tit
 			folder_basename = media_item['upper_name']
 			folder_path = os.path.join(os.path.expanduser(output_path), folder_basename)
 			mkdir(folder_path)
-			os.system('annie -n %d -c "%s" -o "%s" -p av%d' % (int(thread_amount), cookie_path, folder_path, media_item['media_id']))
+			os.system('annie -n %d -c "%s" -o "%s" -p av%d' % (thread_amount, cookie_path, folder_path, media_item['media_id']))
 			# ffmpeg_repack(folder_path, media_item['title'])
 			print("---  " + media_item['title'] + " Complete  ---\n")
 
@@ -174,7 +194,6 @@ def mkdir(path):
 def __main__():
 	dump_mode = input("\nPlease Choose Mode:\n 1 --- Dump Single Folder\n 2 --- Dump All\nMode: ")
 
-	thread_amount = input('Thread amount: ')
 	cookie_path = input('Cookies Path (0 for not required): ')
 	output_path = input('Output Path: ')
 
@@ -182,14 +201,14 @@ def __main__():
 		medialist_info_set = single_info_dump()
 		medialist_detail = medialist_info_set[0]
 		medialist_title = medialist_info_set[1]
-		file_dump(medialist_detail, dump_mode, thread_amount, cookie_path, output_path, title = medialist_title)
+		file_dump(medialist_detail, dump_mode, cookie_path, output_path, title = medialist_title)
 	
 	elif dump_mode == '2':
 		medialist_detail = all_info_dump()
 		serial = 0
 		for medialist in medialist_detail: 
 			title = medialist_brief[serial]['title']
-			file_dump(medialist_detail[serial], dump_mode, thread_amount, cookie_path, output_path, title = title)
+			file_dump(medialist_detail[serial], dump_mode, cookie_path, output_path, title = title)
 			serial += 1
 
 	print('All Complete')
