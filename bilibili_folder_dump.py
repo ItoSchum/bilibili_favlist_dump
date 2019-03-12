@@ -110,7 +110,7 @@ def single_info_dump():
 			title = fav_item['title']    
 			intro = fav_item['intro'] 
 			upper_name = fav_item['upper']['name']
-			print(id, upper_name, title)
+			print(media_id, upper_name, title)
 			
 			medialist_detail.append({'media_id': media_id, 'title': title, 'intro': intro, 'upper_name': upper_name})
 			
