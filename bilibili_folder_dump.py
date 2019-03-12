@@ -2,6 +2,7 @@
 import os
 import json
 import requests
+# import ffmpeg
 
 # f_cookies = open(r"./myBilibiliCookies.txt","r")
 # cookies = f_cookies.read()
@@ -22,7 +23,6 @@ import requests
 prefix = 'https://api.bilibili.com/medialist/gateway/base/'
 
 medialist_brief = []
-medialist_count = 0
 
 def all_info_dump():
 	mid = input('User ID (aka uid/mid): ')
@@ -91,6 +91,7 @@ def single_info_dump():
 	medialist_detail_raw = requests.get(medialist_detail_jsonp).text
 	wdata = json.loads(medialist_detail_raw)
 	media_count = wdata['data']['info']['media_count']
+	medialist_title = wdata['data']['info']['title']
 	
 	if media_count != 0:
 		page_num_max = int(media_count / 20) + 1
@@ -116,11 +117,11 @@ def single_info_dump():
 			
 		print('\n')
 
-	return medialist_detail
+	return (medialist_detail, medialist_title)
 
 
 
-def file_dump(item_list, dump_mode, thread_amount, cookie_path, output_path, title = ''):
+def file_dump(item_list, dump_mode, thread_amount, cookie_path, output_path, title = ""):
 
 	# f_cookies = open(r"./myBilibiliCookies.txt","r")
 	# cookies = f_cookies.read()
@@ -178,8 +179,10 @@ def __main__():
 	output_path = input('Output Path: ')
 
 	if dump_mode == '1':
-		medialist_detail = single_info_dump()
-		file_dump(medialist_detail, dump_mode, thread_amount, cookie_path, output_path)
+		medialist_info_set = single_info_dump()
+		medialist_detail = medialist_info_set[0]
+		medialist_title = medialist_info_set[1]
+		file_dump(medialist_detail, dump_mode, thread_amount, cookie_path, output_path, title = medialist_title)
 	
 	elif dump_mode == '2':
 		medialist_detail = all_info_dump()
