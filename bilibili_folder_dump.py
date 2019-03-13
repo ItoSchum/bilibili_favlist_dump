@@ -127,7 +127,7 @@ def single_info_dump():
 
 def medialist_detail_dump(medialist_detail, medialist_title):
 
-	o_metadata=open(r"./favlist_" + medialist_title + ".csv","w")
+	o_metadata=open(r"./favlist_" + medialist_title + ".csv", "w", encoding='utf-8')
 	print("Media_ID, Upper_ID, Upper_Name, Title", file = o_metadata)
 	
 	for i in range(len(medialist_detail)):
