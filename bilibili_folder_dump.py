@@ -2,6 +2,7 @@
 import os
 import json
 import requests
+import pathlib
 # import ffmpeg
 
 # f_cookies = open(r"./myBilibiliCookies.txt","r")
@@ -47,7 +48,7 @@ def all_info_dump():
 	medialist_brief
 	# len(medialist_brief)
 
-	############################
+	###########################
 	# Each individual medialist
 	medialist_detail = []
 	for i in range(len(medialist_brief)):
@@ -70,14 +71,18 @@ def all_info_dump():
 			medias = wdata['data']['medias']
 			
 			print('Page %02d' % (page_num))
-			for fav_item in medias:    
-				media_id = fav_item['id']    
-				title = fav_item['title']    
-				# intro = fav_item['intro'] 
-				upper_mid = fav_item['upper']['mid']
-				upper_name = fav_item['upper']['name']
-				medialist_detail[serial].append({'media_id': media_id, 'upper_mid': upper_mid, 'intro': intro, 'upper_name': upper_name})
-				
+			for media_item in medias:    
+				media_id = media_item['id']    
+				title = media_item['title']
+				# page_num = medialist_title['page']
+				sub_titles = []
+				for page in media_item['pages']:
+					sub_titles.append(page['title'])   
+				# intro = media_item['intro'] 
+				upper_mid = media_item['upper']['mid']
+				upper_name = media_item['upper']['name']
+
+				medialist_detail[serial].append({'media_id': media_id, 'upper_mid': upper_mid, 'intro': intro, 'upper_name': upper_name, 'sub_titles': sub_titles})
 				print(media_id, upper_name, title)
 			print('\n')
 
@@ -109,15 +114,20 @@ def single_info_dump():
 		medias = wdata['data']['medias']
 			
 		print('Page %02d' % (page_num))
-		for fav_item in medias:    
-			media_id = fav_item['id']    
-			title = fav_item['title']    
-			# intro = fav_item['intro'] 
-			upper_mid = fav_item['upper']['mid']
-			upper_name = fav_item['upper']['name']
+		for media_item in medias:    
+			media_id = media_item['id']    
+			title = media_item['title']
+			# page_num = medialist_title['page']
+			sub_titles = []
+			for page in media_item['pages']:
+				sub_titles.append(page['title'])
+				# print(page['title'])
+			# intro = media_item['intro'] 
+			upper_mid = media_item['upper']['mid']
+			upper_name = media_item['upper']['name']
 			print(media_id, upper_name, title)
 			
-			medialist_detail.append({'media_id': media_id, 'title': title, 'upper_mid': upper_mid, 'upper_name': upper_name})
+			medialist_detail.append({'media_id': media_id, 'title': title, 'upper_mid': upper_mid, 'upper_name': upper_name, 'sub_titles': sub_titles})
 		print('\n')
 
 	medialist_detail_dump(medialist_detail, medialist_title)
@@ -150,27 +160,33 @@ def file_dump(item_list, dump_mode, cookie_path, output_path, title = ""):
 	
 	thread_amount = 15
 
-	if cookie_path == '0':
-		for media_item in item_list: 
-			folder_basename = media_item['upper_name']
-			folder_path = os.path.join(os.path.expanduser(output_path), folder_basename)
-			mkdir(folder_path)
-			os.system('annie -n %d -o "%s" -p av%d' % (thread_amount, folder_path, media_item['media_id']))
-			# ffmpeg_repack(folder_path, media_item['title'])
-			print("---  " + media_item['title'] + " Complete  ---\n")
-	else:
-		for media_item in item_list: 
-			folder_basename = media_item['upper_name']
-			folder_path = os.path.join(os.path.expanduser(output_path), folder_basename)
-			mkdir(folder_path)
-			os.system('annie -n %d -c "%s" -o "%s" -p av%d' % (thread_amount, cookie_path, folder_path, media_item['media_id']))
-			# ffmpeg_repack(folder_path, media_item['title'])
-			print("---  " + media_item['title'] + " Complete  ---\n")
+	for media_item in item_list: 
+		folder_basename = media_item['upper_name']
+		folder_path = os.path.join(os.path.expanduser(output_path), folder_basename)
+		mkdir(folder_path)
 
+		for sub_title in media_item['sub_titles']:
 
+			target_flv = media_item['title'] + ' ' + sub_title + '.flv'
+			target_mp4 = media_item['title'] + ' ' + sub_title + '.mp4'
+			
+			path_flv = pathlib.Path(os.path.join(os.path.expanduser(folder_path), target_flv))
+			path_mp4 = pathlib.Path(os.path.join(os.path.expanduser(folder_path), target_mp4))
+			# print("Current: " + target_flv)
+			# print("Current Target: " + os.path.join(os.path.expanduser(folder_path), target_flv))
+			
+			if not(path_flv.exists() or path_mp4.exists()):
+				if cookie_path == '0':
+					os.system('annie -n %d -o "%s" -p av%d' % (thread_amount, folder_path, media_item['media_id']))
+				else:
+					os.system('annie -n %d -c "%s" -o "%s" -p av%d' % (thread_amount, cookie_path, folder_path, media_item['media_id']))
+				# ffmpeg_repack(folder_path, media_item['title'])
+				print("--- DOWNLOAD COMPLETE --- " + target_flv)
+			else:
+				print("--- FILE Already Existed --- " + target_flv)
+			
 
 # def ffmpeg_repack(folder_path, title):
-	
 # 	media_basename = os.path.join(os.path.expanduser(folder_path), title)
 # 	media_input = media_basename + '.flv'
 # 	media_output = media_basename + '.mp4'
@@ -185,9 +201,9 @@ def mkdir(path):
 	folder = os.path.exists(path)
 	if not folder:                   
 		os.makedirs(path)            
-		print("---  Made New Dir  ---")
+		print("---  MAKE NEW DIR  ---")
 	else:
-		print("---  Alredy Exsits  ---")
+		print("---  DIR Already Existed  ---")
 
 
 
