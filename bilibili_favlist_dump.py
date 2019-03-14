@@ -152,12 +152,12 @@ def medialist_detail_dump(medialist_detail, medialist_title):
 
 	ps = "PS: Single Media_ID may contain multiple videos."
 	print("\n")
-	print('Media_Amount, Valid_Amount', file = o_metadata)
+	print("Media_Amount, Valid_Amount", file = o_metadata)
 	print('"%s", "%s", "%s"' % (media_page_sum, valid_sum, ps), file = o_metadata)
 	
-	print('Media Amount: "%s"' % (media_page_sum))
-	print('Valid Amount: "%s"' % (valid_sum))
-	print('PS: single Media_ID may contain multiple videos.')
+	print("Media Amount: %s" % (media_page_sum))
+	print("Valid Amount: %s" % (valid_sum))
+	print("PS: single Media_ID may contain multiple videos.")
 
 	print("\nDONE. Metadata file has been created in your current directory.")
 	o_metadata.close()
@@ -181,25 +181,67 @@ def file_dump(item_list, dump_mode, cookie_path, output_path, title = ""):
 		folder_path = os.path.join(os.path.expanduser(output_path), folder_basename)
 		mkdir(folder_path)
 
+		part_num = 0
 		for sub_title in media_item['sub_titles']:
+			part_num += 1
+			
+			if sub_title != "":	
+				target = media_item['title'] + " " + sub_title
+				if len(target) > 80:
+					target = media_item['title'] + " P" + str(part_num) + " " + sub_title
+					target = target[0:77] + "..."
+			else:
+				target = media_item['title']
+				if len(target) > 80:
+					target = target[0:77] + "..."
 
-			target_flv = media_item['title'] + ' ' + sub_title + '.flv'
-			target_mp4 = media_item['title'] + ' ' + sub_title + '.mp4'
+			target_flv = target + ".flv"
+			target_mp4 = target + ".mp4"
 			
-			path_flv = pathlib.Path(os.path.join(os.path.expanduser(folder_path), target_flv))
-			path_mp4 = pathlib.Path(os.path.join(os.path.expanduser(folder_path), target_mp4))
-			# print("Current: " + target_flv)
-			# print("Current Target: " + os.path.join(os.path.expanduser(folder_path), target_flv))
+			target_fuzzy = target.split('...')[0]
+			target_fuzzy = target_fuzzy.replace("'", "’")
+			target_fuzzy = target_fuzzy.replace("/", " ")
+			target_fuzzy = target_fuzzy.replace("┗|", "┗-")
+			target_fuzzy = target_fuzzy.replace("|┓", "-┓")
+			target_fuzzy = target_fuzzy.replace(": ", "：")
+			target_fuzzy_branch = target_fuzzy.replace(":", "：")
 			
-			if not(path_flv.exists() or path_mp4.exists()):
+			target_fuzzy_flv = target_fuzzy + ".flv"
+			target_fuzzy_mp4 = target_fuzzy + ".mp4"
+			
+			# path_flv = pathlib.Path(os.path.join(os.path.expanduser(folder_path), target_flv))
+			# path_mp4 = pathlib.Path(os.path.join(os.path.expanduser(folder_path), target_mp4))
+			# print("CURRENT: " + target_flv)
+			# print("CURRENT TARGET: " + os.path.join(os.path.expanduser(folder_path), target_flv))
+			
+			target_exist_check = False
+			exist_files = os.listdir(os.path.join(os.path.expanduser(folder_path) ) )
+			print("TARGET: " + target_fuzzy + "(.flv/.mp4)")
+			for file in exist_files:
+				# print("EXIST:  " + file.split('...')[0])
+				if (target_fuzzy == file.split('...')[0] or target_fuzzy_branch == file.split('...')[0] or target_fuzzy_flv == file or target_fuzzy_mp4 == file):
+					target_exist_check = True
+					break
+				elif "活动作品" in file:
+					target_fuzzy == file.split("活动作品")[1]
+					target_exist_check = True
+					break
+
+			# if (path_flv.exists() or path_mp4.exists()):
+			# 	target_exist_check = True
+
+			if target_exist_check == True:
+				print("--- FILE Already Exists --- " + target_fuzzy + "(.flv/.mp4)")
+
+			else:
 				if cookie_path == '0':
 					os.system('annie -n %d -o "%s" -p av%d' % (thread_amount, folder_path, media_item['media_id']))
 				else:
 					os.system('annie -n %d -c "%s" -o "%s" -p av%d' % (thread_amount, cookie_path, folder_path, media_item['media_id']))
 				# ffmpeg_repack(folder_path, media_item['title'])
-				print("--- DOWNLOAD COMPLETE --- " + target_flv)
-			else:
-				print("--- FILE Already Existed --- " + target_flv)
+				print("--- DOWNLOAD COMPLETE --- " + target + "(.flv/.mp4)")
+			
+				
 			
 
 # def ffmpeg_repack(folder_path, title):
@@ -219,15 +261,15 @@ def mkdir(path):
 		os.makedirs(path)            
 		print("---  MADE NEW DIR  ---")
 	else:
-		print("---  DIR Already Existed  ---")
+		print("---  DIR Already Exists  ---")
 
 
 
 def __main__():
-	dump_mode = input("\nPlease Choose Mode:\n 1 --- Dump Single Folder\n 2 --- Dump All\n 3 --- Dump Single List Info\n 4 --- Dump All List Info\nMode: ")
+	dump_mode = input("\nPlease Choose Mode:\n 1 --- Dump Single Favlist\n 2 --- Dump All\n 3 --- Dump Single Favlist Info\n 4 --- Dump All Favlist Info\nMode: ")
 
 	if dump_mode == '1':
-		cookie_path = input('Cookies Path (0 for not required): ')
+		cookie_path = input('Cookie Path (0 for not required): ')
 		output_path = input('Output Path: ')
 
 		medialist_info_set = single_info_dump()
@@ -236,7 +278,7 @@ def __main__():
 		file_dump(medialist_detail, dump_mode, cookie_path, output_path, title = medialist_title)
 	
 	elif dump_mode == '2':
-		cookie_path = input('Cookies Path (0 for not required): ')
+		cookie_path = input('Cookie Path (0 for not required): ')
 		output_path = input('Output Path: ')
 
 		medialist_info_set = all_info_dump()
