@@ -54,7 +54,8 @@
 		- path without any special character is recommended
 		- e.g. `~/[$YOUR_DIRNAME]`
 	- If the `path` doesn't exist, it will be made up automatically, or it will just use the exist one.
-	- If you choose a `path` where there has already been some earlier image downloads by this script or not, the images will still be downloaded and replaced (if they share the same name).
+	- If you choose a `path` where there has already been some dumped files by this script, the videos won't be re-dumped as long as they shared the same filename.
+	- re-dump check **mostly** works (The rest of the checking task can be perfectly handled by `annie` itself)
 
 5. When `User ID (aka uid/mid): ` or `Medialist ID (aka fid): ` displayed<br> 
 	- Please input the uid/mid or fid (depend on the mode you chosen)
