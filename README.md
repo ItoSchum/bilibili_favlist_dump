@@ -1,10 +1,10 @@
-# Bilibili Folder Dump
+# Bilibili Favlist Dump
 
 ## Feature
-- Crawl Bilibili Public Folders
-- Crawl all the public folders of one user or the specific one (**Public Only**)
+- Crawl Bilibili Public Favlist
+- Crawl all the public Favlist of one user or the specific one (**Public Only**)
 - **Auto-sort** downloads by uploder name automatically
-- Auto-build **csv** files for each folder
+- Auto-build **csv** files for each Favlist
 
 ## Requirement
 - Python3
@@ -36,10 +36,15 @@
 1. Open up any terminal app (e.g. macOS - Teriminal.app, Windows - CMD and etc.) and input command `python3 [SCRIPT_PATH]`
 
 2. When `Please Choose Mode:` displayed<br>
-	- Input `1`: Dump Single Folder (fid will be required)
-		- It will download all of the videos in the chosen folder. 
-	- Input `2`: Dump All (uid/mid will be required)
-		- It will download the videos in every folder which is public by the target user. 
+
+	- Input `1`: Dump Single Favlist (`fid` required)
+		- It will dump all the info and videos of the chosen Favlist. 
+	- Input `2`: Dump All Favlists (`uid/mid` required)
+		- It will dump the info and videos in every Favlist, which is set Public by the user. 
+	- Input `3`: Dump Single Favlist (Info Only) (`fid` required)
+		- It will dump the info of of the chosen Favlist. 
+	- Input `4`: Dump All Favlists (Info Only) (`uid/mid` required)
+		- It will dump the info in every Favlist, which is set Public by the user. 
 
 3. When `Cookies Path (0 for not required): ` displayed<br>
 	- Please input the path to load the Cookies (for hi-definition version videos' requirement).
@@ -54,6 +59,15 @@
 5. When `User ID (aka uid/mid): ` or `Medialist ID (aka fid): ` displayed<br> 
 	- Please input the uid/mid or fid (depend on the mode you chosen)
 
+## Reference of CSV
+- Any Mode option will build a csv file automatically which inludes the elements below
+	- `Media_ID`: The ID of the video in Bilibili, e.g. av3046665
+	- `Media_Title`: The video's title in Bilibili
+	- `Upper_ID`: The ID of the video uploader in Bilibili, e.g. 2811374
+	- `Upper_Name`: The name of the video uploader in Bilibili
+	- `Media_Amount`: The sum of the videos in the Favlist (One `Media_ID` may contain multiple videos)
+	- `Valid_Amount`: The sum of the videos, which is not invalid, in the Favlist
+	
 ## *Additonal
 > Not included in the Python script
 
