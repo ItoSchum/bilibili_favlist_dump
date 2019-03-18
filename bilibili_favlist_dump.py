@@ -204,8 +204,8 @@ def file_dump(item_list, dump_mode, cookie_path, output_path, title = ""):
 			target_fuzzy = target_fuzzy.replace("┗|", "┗-")
 			target_fuzzy = target_fuzzy.replace("|┓", "-┓")
 			target_fuzzy = target_fuzzy.replace(": ", "：")
-			target_fuzzy_branch = target_fuzzy.replace(":", "：")
-			
+			target_fuzzy = target_fuzzy.replace("★|", "★-")
+
 			target_fuzzy_flv = target_fuzzy + ".flv"
 			target_fuzzy_mp4 = target_fuzzy + ".mp4"
 			
@@ -218,8 +218,11 @@ def file_dump(item_list, dump_mode, cookie_path, output_path, title = ""):
 			exist_files = os.listdir(os.path.join(os.path.expanduser(folder_path) ) )
 			# print("TARGET: " + target_fuzzy + "(.flv/.mp4)")
 			for file in exist_files:
-				# print("EXIST:  " + file.split('...')[0])
-				if (target_fuzzy == file.split('...')[0] or target_fuzzy_branch == file.split('...')[0] or target_fuzzy_flv == file or target_fuzzy_mp4 == file):
+				# print("EXIST:  " + file.split('...')[0]) 
+				if (target_fuzzy_flv == file or target_fuzzy_mp4 == file):
+					target_exist_check = True
+					break
+				elif target_fuzzy == file.split('...')[0]:
 					target_exist_check = True
 					break
 				elif "活动作品" in file:
