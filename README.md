@@ -76,7 +76,7 @@
 
 - Usage:
 	1. `cd` to the target directory in Terminal
-	2. `sh [$shell_script_path]`
+	2. `bash [$shell_script_path]`
 	3. When `Keep original flv files? (Y/N) ` displayed
 		- Input `Y` or `y` if you want to keep the origianl flv files 
 
